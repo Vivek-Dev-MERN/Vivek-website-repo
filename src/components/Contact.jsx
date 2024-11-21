@@ -34,7 +34,7 @@ const Contact = () => {
       )
         .then(() => {
           setStatus("Thank you for reaching out! I will get back to you soon.");
-          setFormData({ name: "", email: "", message: "" }); // Reset form
+          setFormData({ name: '', email: '', message: ''}); // Reset form
         })
         .catch(() => {
           setStatus("Something went wrong. Please try again later.");
