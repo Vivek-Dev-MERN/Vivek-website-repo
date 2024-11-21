@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
-import './Contact.css';
+import React, { useState } from "react";
+import "./Contact.css";
+import { send } from "emailjs-com";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
+    name: "",
+    email: "",
+    message: "",
   });
 
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,11 +18,29 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Ensure all fields are filled
     if (formData.name && formData.email && formData.message) {
-      setStatus('Thank you for reaching out! I will get back to you soon.');
-      setFormData({ name: '', email: '', message: '' }); // Reset form
+      // Send email using EmailJS
+      send(
+        "service_nqkkht5", // Replace with your EmailJS service ID
+        "template_t1yqbeu", // Replace with your EmailJS template ID
+        {
+          from_name: formData.name,
+          reply_to: formData.email,
+          message: formData.message,
+        },
+        "pAyJGRb4Y4ZmURpmU" // Replace with your EmailJS public key
+      )
+        .then(() => {
+          setStatus("Thank you for reaching out! I will get back to you soon.");
+          setFormData({ name: "", email: "", message: "" }); // Reset form
+        })
+        .catch(() => {
+          setStatus("Something went wrong. Please try again later.");
+        });
     } else {
-      setStatus('Please fill out all fields.');
+      setStatus("Please fill out all fields.");
     }
   };
 
@@ -52,7 +71,9 @@ const Contact = () => {
           onChange={handleChange}
           required
         ></textarea>
-        <button type="submit" className="btn">Send Message</button>
+        <button type="submit" className="btn">
+          Send Message
+        </button>
       </form>
       {status && <p className="status-message">{status}</p>}
     </section>
